@@ -1,5 +1,6 @@
 # openwrt-hostname-resolver
-hostapd script for dumb ap to resolve hostname from router (dhcp server) on AP-STA-CONNECTED
+hostapd script for dumb ap to resolve hostname from router (dhcp server) on AP-STA-CONNECTED  
+No more question marks or MACs in "Associated Stations" list!
 
 ## usage
 - alter the `hostname-resolver.hostapd` file to replace "root@router" with your user/hostname if needed 
