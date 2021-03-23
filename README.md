@@ -6,7 +6,5 @@ hostapd script for dumb ap to resolve hostname from router (dhcp server) on AP-S
 - put the `hostname-resolver.hostapd` file somewhere on your dumb ap (like in `/bin`)
 - make it executable with `chmod a+x hostname-resolver.hostapd`
 - put the following lines in `/etc/rc.local`, updating paths and wlan interfaces if needed:
-```
-hostapd_cli -a /bin/hostname-resolver.hostapd -i wlan0 -B
-hostapd_cli -a /bin/hostname-resolver.hostapd -i wlan1 -B
-```
+  `hostapd_cli -a /bin/hostname-resolver.hostapd -i wlan0 -B`
+  `hostapd_cli -a /bin/hostname-resolver.hostapd -i wlan1 -B`
