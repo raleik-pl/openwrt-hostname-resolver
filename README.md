@@ -9,3 +9,5 @@ No more question marks or MACs in "Associated Stations" list!
 - put the following lines in `/etc/rc.local`, updating paths and wlan interfaces if needed:  
   `hostapd_cli -a /bin/hostname-resolver.hostapd -i wlan0 -B`  
   `hostapd_cli -a /bin/hostname-resolver.hostapd -i wlan1 -B`
+
+the script assumes that your ap can connect to your router passwordlessly (va ssh key)
