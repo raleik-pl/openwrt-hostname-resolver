@@ -1,15 +1,13 @@
 #!/bin/sh
 
-if [ "$2" != "AP-STA-CONNECTED" ]; then
-  exit 0
-fi
+[ "$2" != "AP-STA-CONNECTED" ] && exit 0
 
 MAC=$(echo $3 | tr A-Z a-z)
-LEASE=$(ssh root@router cat /tmp/dhcp.leases)
-IP=$(echo $LEASE | tr A-Z a-z | grep $MAC | cut -d " " -f 3)
-HOSTNAME=$(echo $LEASE | grep $IP | cut -d " " -f 4)
-ping -c1 -W1 $IP
-logger -t "hostname-resolver" "hostapd event received if:$1 evt:$2 mac:$3 ip:$IP hostname:$HOSTNAME"
-[ -n "$4" ] && echo "hostname-resolver: hostapd event received if:$1 evt:$2 mac:$3 ip:$IP hostname:$HOSTNAME"
+LEASE=$(ssh root@router.local cat /tmp/dhcp.leases)
+IP=$(echo "$LEASE" | tr A-Z a-z | grep $MAC | cut -d " " -f 3)
+[ -n "$IP" ] && NAME=$(echo "$LEASE" | grep $IP | cut -d " " -f 4) && ping -c1 -W1 $NAME.local
+
+logger -t "hostname-resolver" "mac:$3 ip:${IP:-n/a} hostname:${NAME:-n/a}"
+[ -n "$4" ] && echo "hostname-resolver: mac:$3 ip:${IP:-n/a} hostname:${NAME:-n/a}"
 
 exit 0
