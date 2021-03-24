@@ -1,13 +1,16 @@
 #!/bin/sh
 
 if [ "$2" != "AP-STA-CONNECTED" ]; then
-  exit 0
+  exit 1
 fi
 
-MAC=$(echo $3 | tr '[:upper:]' '[:lower:]')
-LEASE=$(ssh root@router cat /tmp/dhcp.leases | tr '[:upper:]' '[:lower:]' | grep $MAC)
-IP=$(echo $LEASE | cut -d " " -f 3)
-HOSTNAME=$(echo $LEASE | cut -d " " -f 4)
-ping -c1 -W1 $IP > /dev/null
+MAC=$(echo $3 | tr a-z A-Z)
+
+HOSTHINT=$(ssh root@router ubus call luci-rpc getHostHints | jsonfilter -e '$['"'$MAC'"']')
+IP=$(echo $HOSTHINT | jsonfilter -e '$.ipv4')
+HOSTNAME=$(echo $HOSTHINT | jsonfilter -e '$.name')
+ping -c1 -W1 $IP
 logger -t "hostname-resolver" "hostapd event received if:$1 evt:$2 mac:$3 hostname:$HOSTNAME ip:$IP"
-#echo "hostapd event received evt:$2 if:$1 mac:$3 hostname:$HOSTNAME ip:$IP"
+[ -n "$4" ] && echo "hostname-resolver: hostapd event received evt:$2 if:$1 mac:$MAC hostname:$HOSTNAME ip:$IP"
+
+exit 0
